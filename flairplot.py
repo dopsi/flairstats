@@ -29,7 +29,7 @@ html_begin = """<!doctype html>
 	<head>
 	<meta charset="utf-8">
 
-	<title>The HTML5 Herald</title>
+	<title>r/france commenter flairs statistics</title>
 	<meta name="description" content="Visualisation of r/france comment author's flairs">
 	<meta name="author" content="dopsi">
 
