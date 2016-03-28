@@ -1,0 +1,7 @@
+[Unit]
+Description=Fetch new comments on the specified subreddit
+
+[Service]
+Type=oneshot
+EnvironmentFile=%i
+ExecStart=/usr/bin/flairstats.py $SUBREDDIT $TARGETDIR

@@ -1,0 +1,11 @@
+[Unit]
+Description=Timer fetch subreddit comments every 5 minutes
+
+[Timer]
+OnBootSec=15min
+OnActiveSec=1min
+OnUnitActiveSec=5min
+Unit=flairstats@%i.service
+
+[Install]
+WantedBy=default.target
