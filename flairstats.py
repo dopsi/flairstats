@@ -44,5 +44,5 @@ for i in sub_comments:
 
 j['lastcomment'] = new_lastcomment
 
-with open('flairs.json', mode='w') as f:
+with open(sys.argv[2]+'flairs.json', mode='w') as f:
     json.dump(j, f)
