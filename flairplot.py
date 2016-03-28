@@ -41,6 +41,8 @@ html_begin = """<!doctype html>
 html_end="""</p>
 	</body>
 </html>"""
+comments_sum=sum([ x[1] for x in D.items()]))
+html = html_begin+str(datetime.datetime.now())+', '+comments_sum+' comments analysed'+html_end
 
 with open(sys.argv[1]+"/index.html", "w") as f:
-    f.write(html_begin+str(datetime.datetime.now())+html_end)
+    f.write(html)
