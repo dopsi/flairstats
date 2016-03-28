@@ -1,6 +1,7 @@
 #! /usr/bin/env python3
 
 import json
+import sys
 from praw import Reddit
 
 my_user_agent = 'subreddit flair statistics - by u/dopsi'
