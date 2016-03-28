@@ -9,10 +9,10 @@ r = Reddit(user_agent=my_user_agent)
 
 flair='none'
 
-with open('flairs.json') as f:
+with open(sys.argv[2]+'/flairs.json') as f:
     j = json.load(f)
 
-sub_comments = r.get_comments('france')
+sub_comments = r.get_comments(sys.argv[1])
 
 first = True
 new_lastcomment = j['lastcomment']
