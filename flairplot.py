@@ -17,7 +17,7 @@ D = OrderedDict(sorted(j['data'].items(), key=lambda t: t[1]))
 
 rng = range(len(D))
 plt.figure(figsize=(40,20), dpi=100)
-plt.barh(rng, D.values(), align='center')
+plt.barh(rng, D.values(), align='center', log=True)
 plt.yticks(rng, D.keys())
 plt.title("Flairs de r/france par nombre de commentaires")
 
