@@ -42,7 +42,7 @@ html_end="""</p>
 	</body>
 </html>"""
 comments_sum=sum([ x[1] for x in D.items()])
-html = html_begin+str(datetime.datetime.now())+', '+str(comments_sum)+' comments analysed'+html_end
+html = html_begin+str(datetime.datetime.now())+', '+str(comments_sum)+' comments analysed ('+str(100*float(D['none'])/float(comments_sum))+"% without flair, i.e. not displayed)"+html_end
 
 with open(sys.argv[1]+"/index.html", "w") as f:
     f.write(html)
