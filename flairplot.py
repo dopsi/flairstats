@@ -15,8 +15,11 @@ with open(sys.argv[1]+"/flairs.json") as f:
 
 D = OrderedDict(sorted(j['data'].items(), key=lambda t: t[1]))
 
+none_comments = D['none']
+del D['none']
+
 rng = range(len(D))
-plt.figure(figsize=(40,20), dpi=100)
+plt.figure(figsize=(40,30), dpi=100)
 plt.barh(rng, D.values(), align='center', log=True)
 plt.yticks(rng, D.keys())
 plt.title("Flairs de r/france par nombre de commentaires")
@@ -42,7 +45,7 @@ html_end="""</p>
 	</body>
 </html>"""
 comments_sum=sum([ x[1] for x in D.items()])
-html = html_begin+str(datetime.datetime.now())+', '+str(comments_sum)+' comments analysed ('+str(100*float(D['none'])/float(comments_sum))+"% without flair, i.e. not displayed)"+html_end
+html = html_begin+str(datetime.datetime.now())+', '+str(comments_sum)+' comments analysed ('+str(100*float(none_comments)/float(comments_sum))+"% without flair, i.e. not displayed)"+html_end
 
 with open(sys.argv[1]+"/index.html", "w") as f:
     f.write(html)
