@@ -20,7 +20,7 @@ del D['none']
 
 rng = range(len(D))
 plt.figure(figsize=(40,10+len(D)*.2), dpi=100)
-plt.barh(rng, D.values(), align='center', log=True)
+plt.barh(rng, D.values(), align='center')
 plt.yticks(rng, D.keys())
 plt.title("Flairs de r/france par nombre de commentaires")
 
