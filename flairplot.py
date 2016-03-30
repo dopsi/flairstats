@@ -45,7 +45,7 @@ html_end="""</p>
 	</body>
 </html>"""
 comments_sum=sum([ x[1] for x in D.items()])
-html = html_begin+str(datetime.datetime.now())+', '+str(comments_sum)+' comments analysed ('+str(100*float(none_comments)/float(comments_sum))+"% without flair, i.e. not displayed)"+html_end
+html = html_begin+datetime.datetime.now().strftime('%Y-%m-%d %H:%M %Z')+', '+str(comments_sum)+' comments analysed ('+'{0:.2f}'.format(100*float(none_comments)/float(comments_sum))+"% without flair, i.e. not displayed)"+html_end
 
 with open(sys.argv[1]+"/index.html", "w") as f:
     f.write(html)
