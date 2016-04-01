@@ -10,6 +10,9 @@ Version 2 of flairstats will implement more features, in particular :
 * getting statistics about unique users posting
 * getting statistics about the activity during the day of flair or a user
 * have a ranking of the most used flairs overall and in function of the time
+* taking snapshots of the current data
+* data backup in a dbm file
+* unlike v1, also take in account new posts
 
 Versionning
 -----------
