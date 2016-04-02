@@ -22,8 +22,10 @@ The development branch can be fount
 
 Features are :
 
-- [ ] Comment flairs statistics (as in V1)
-- [ ] Post flairs statistics
+- [x] Comments flairs presence statistics (as in V1)
+- [x] Comments unique users flairs statistics
+- [ ] Post flairs presence statistics
+- [ ] Posts unique users flairs statistics
 - [ ] Provide graphs
 - [ ] Pretty HTML output
 
