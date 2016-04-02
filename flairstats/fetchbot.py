@@ -17,6 +17,7 @@ class FetchBot:
         print('FetchBot called for r/'+self._subreddit)
 
 def FetchBotGenerator(config_file):
+    """Generate a list-like container of FetchBot objects"""
     with open(config_file) as cf:
         json_config = json.load(cf)
 
@@ -24,7 +25,8 @@ def FetchBotGenerator(config_file):
     for i in json_config['bots']:
         yield FetchBot(user_agent, i['subreddit'], i['data-file'])
 
-def run():
+def autorun():
+    """Autorun function of this module"""
     home = os.getenv('HOME')
     config_file = os.path.join(home, '.config/flairstats/config.json')
     if not os.path.exists(config_file):
@@ -36,4 +38,4 @@ def run():
         bot.fetch()
 
 if __name__ == "__main__":
-    run()
+    autorun()
