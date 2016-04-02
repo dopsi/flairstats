@@ -48,12 +48,20 @@ class FetchBot:
 
             if comment.author_flair_text:
                 try:
-                    if str(comment.author) not in self._data['unique-users']:
-                        self._data['unique-users'][str(comment.author)] = comment.author_flair_text
+                    if str(comment.author) not in self._data['comments']['unique-users']:
+                        self._data['comments']['unique-users'][str(comment.author)] = comment.author_flair_text
                 except KeyError:
-                    self._data['unique-users'] = dict()
-                    if str(comment.author) not in self._data['unique-users']:
-                        self._data['unique-users'][str(comment.author)] = comment.author_flair_text
+                    self._data['comments']['unique-users'] = dict()
+                    if str(comment.author) not in self._data['comments']['unique-users']:
+                        self._data['comments']['unique-users'][str(comment.author)] = comment.author_flair_text
+
+                if 'flair-presence' not in self._data['comments']:
+                    self._data['comments']['flair-presence'] = dict()
+
+                try:
+                    self._data['comments']['flair-presence'][str(comment.author_flair_text)] += 1
+                except KeyError:
+                    self._data['comments']['flair-presence'][str(comment.author_flair_text)] = 1
         
         self._data['comments']['last'] = new_comment_creation_limit
 
