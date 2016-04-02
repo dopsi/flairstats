@@ -11,10 +11,52 @@ class FetchBot:
         self._user_agent = user_agent
         self._subreddit = subreddit
         self._data_file = data_file
+        try:
+            with open(self._data_file) as df:
+                self._data = json.load(df)
+        except (FileNotFoundError,json.decoder.JSONDecodeError):
+            self._data = json.loads('{"comments":{},"posts":{}}')
+
+        self._praw = Reddit(self._user_agent)
+
+    def __del__(self):
+        with open(self._data_file, 'w') as df:
+            json.dump(self._data, df)
 
     def fetch(self):
         """Fetching function"""
-        print('FetchBot called for r/'+self._subreddit)
+        submissions = self._praw.get_comments(self._subreddit, limit=500)
+
+        is_first = True
+
+        try:
+            new_comment_creation_limit = self._data['comments']['last']
+        except:
+            self._data['comments']['last'] = new_comment_creation_limit = 0
+
+        for comment in submissions:
+            if is_first:
+                is_first = False
+                new_comment_creation_limit = comment.created
+            if comment.created <= self._data['comments']['last']:
+                break
+
+            try:
+                self._data['comments']['count'] += 1
+            except KeyError:
+                self._data['comments']['count'] = 1
+
+            if comment.author_flair_text:
+                try:
+                    if str(comment.author) not in self._data['unique-users']:
+                        self._data['unique-users'][str(comment.author)] = comment.author_flair_text
+                except KeyError:
+                    self._data['unique-users'] = dict()
+                    if str(comment.author) not in self._data['unique-users']:
+                        self._data['unique-users'][str(comment.author)] = comment.author_flair_text
+        
+        self._data['comments']['last'] = new_comment_creation_limit
+
 
 def FetchBotGenerator(config_file):
     """Generate a list-like container of FetchBot objects"""
