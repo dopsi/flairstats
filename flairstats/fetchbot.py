@@ -3,6 +3,8 @@ from praw import Reddit
 import json
 import os
 
+import time
+
 class FetchBot:
     """Bot to fetch the subreddit data."""
 
@@ -28,6 +30,11 @@ class FetchBot:
         submissions = self._praw.get_comments(self._subreddit, limit=500)
 
         is_first = True
+
+        try:
+            self._data['comments']['first']
+        except:
+            self._data['comments']['first'] = float(round(time.time()))
 
         try:
             new_comment_creation_limit = self._data['comments']['last']
