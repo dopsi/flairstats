@@ -24,8 +24,9 @@ Features are :
 
 - [x] Comments flairs presence statistics (as in V1)
 - [x] Comments unique users flairs statistics
-- [ ] Post flairs presence statistics
-- [ ] Posts unique users flairs statistics
+- [x] Post authors flairs presence statistics
+- [x] Post flairs presence statistics
+- [x] Posts unique users flairs statistics
 - [ ] Provide graphs
 - [ ] Pretty HTML output
 

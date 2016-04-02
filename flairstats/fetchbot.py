@@ -27,50 +27,63 @@ class FetchBot:
 
     def fetch(self):
         """Fetching function"""
-        submissions = self._praw.get_comments(self._subreddit, limit=500)
+        self._fetch(self._praw.get_comments(self._subreddit, limit=500), 'comments')
+        self._fetch(self._praw.get_subreddit('france').get_new(limit=500), 'posts')
+
+    def _fetch(self, submissions, key):
+        """Generic fetching function"""
 
         is_first = True
 
         try:
-            self._data['comments']['first']
+            self._data[key]['first']
         except:
-            self._data['comments']['first'] = float(round(time.time()))
+            self._data[key]['first'] = float(round(time.time()))
 
         try:
-            new_comment_creation_limit = self._data['comments']['last']
+            new_creation_limit = self._data[key]['last']
         except:
-            self._data['comments']['last'] = new_comment_creation_limit = 0
+            self._data[key]['last'] = new_creation_limit = 0
 
-        for comment in submissions:
+        for it in submissions:
             if is_first:
                 is_first = False
-                new_comment_creation_limit = comment.created
-            if comment.created <= self._data['comments']['last']:
+                new_creation_limit = it.created
+            if it.created <= self._data[key]['last']:
                 break
 
             try:
-                self._data['comments']['count'] += 1
+                self._data[key]['count'] += 1
             except KeyError:
-                self._data['comments']['count'] = 1
+                self._data[key]['count'] = 1
 
-            if comment.author_flair_text:
+            if it.author_flair_text:
                 try:
-                    if str(comment.author) not in self._data['comments']['unique-users']:
-                        self._data['comments']['unique-users'][str(comment.author)] = comment.author_flair_text
+                    if str(it.author) not in self._data[key]['unique-users']:
+                        self._data[key]['unique-users'][str(it.author)] = it.author_flair_text
                 except KeyError:
-                    self._data['comments']['unique-users'] = dict()
-                    if str(comment.author) not in self._data['comments']['unique-users']:
-                        self._data['comments']['unique-users'][str(comment.author)] = comment.author_flair_text
+                    self._data[key]['unique-users'] = dict()
+                    if str(it.author) not in self._data[key]['unique-users']:
+                        self._data[key]['unique-users'][str(it.author)] = it.author_flair_text
 
-                if 'flair-presence' not in self._data['comments']:
-                    self._data['comments']['flair-presence'] = dict()
+                if 'flair-presence' not in self._data[key]:
+                    self._data[key]['flair-presence'] = dict()
 
                 try:
-                    self._data['comments']['flair-presence'][str(comment.author_flair_text)] += 1
+                    self._data[key]['flair-presence'][str(it.author_flair_text)] += 1
                 except KeyError:
-                    self._data['comments']['flair-presence'][str(comment.author_flair_text)] = 1
+                    self._data[key]['flair-presence'][str(it.author_flair_text)] = 1
+
+            if key == 'posts':
+                if 'subject-presence' not in self._data[key]:
+                    self._data[key]['subject-presence'] = dict()
+
+                try:
+                    self._data[key]['subject-presence'][str(it.link_flair_text)] += 1
+                except KeyError:
+                    self._data[key]['subject-presence'][str(it.link_flair_text)] = 1
         
-        self._data['comments']['last'] = new_comment_creation_limit
+        self._data[key]['last'] = new_creation_limit
 
 
 def FetchBotGenerator(config_file):
