@@ -14,6 +14,19 @@ Version 2 of flairstats will implement more features, in particular :
 * data backup in a dbm file
 * unlike v1, also take in account new posts
 
+Project status
+--------------
+
+The development branch can be fount 
+[here](https://github.com/dopsi/flairstats/tree/v2-dev).
+
+Features are :
+
+- [ ] Comment flairs statistics (as in V1)
+- [ ] Post flairs statistics
+- [ ] Provide graphs
+- [ ] Pretty HTML output
+
 Versionning
 -----------
 
