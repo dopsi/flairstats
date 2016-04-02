@@ -6,13 +6,11 @@ import os
 class FetchBot:
     """Bot to fetch the subreddit data."""
 
-    def __init__(self, user_agent, subreddit, data_file, user=None, password=None):
+    def __init__(self, user_agent, subreddit, data_file):
         """Basic constructor"""
         self._user_agent = user_agent
         self._subreddit = subreddit
         self._data_file = data_file
-        self._user = user
-        self._password = password
 
     def fetch(self):
         """Fetching function"""
