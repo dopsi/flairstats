@@ -5,7 +5,7 @@ Description=Schedule FetchBot runs
 OnBootSec=1min
 OnActiveSec=1min
 OnUnitActiveSec=5min
-Unit=flairstats@%i.service
+Unit=flairstats-fetchbot@%i.service
 
 [Install]
 WantedBy=default.target
