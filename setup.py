@@ -28,4 +28,8 @@ setup(
         "Topic :: Text Processing :: Markup :: HTML",
         "License :: OSI Approved :: MIT License",
     ],
+    install_dependencies=[
+        'htmlgenerator',
+        'praw'
+    ]
 )
