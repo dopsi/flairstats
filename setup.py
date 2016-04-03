@@ -20,7 +20,8 @@ setup(
     packages=['flairstats'],
     data_files=[
         ('share/doc/flairstats/config', ['config/config.json']),
-        ('lib/systemd/system', ['systemd/system/flairstats-fetchbot@.service', 'systemd/system/flairstats-fetchbot@.timer'])
+        ('lib/systemd/system', ['systemd/system/flairstats-fetchbot@.service', 'systemd/system/flairstats-fetchbot@.timer']),
+        ('lib/systemd/system', ['systemd/system/flairstats-statsbot@.service', 'systemd/system/flairstats-statsbot@.timer'])
     ],
     long_description=read('README.md'),
     classifiers=[
