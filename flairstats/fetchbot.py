@@ -23,7 +23,6 @@ class FetchBot:
             if self._data['subreddit'] != self._subreddit:
                 raise ValueError('The data file does not correspond the subreddit r/'+self._subreddit)
         except KeyError:
-            print("Setting the subreddit value")
             self._data['subreddit'] = self._subreddit
 
         self._praw = Reddit(self._user_agent)
@@ -31,7 +30,7 @@ class FetchBot:
     def __del__(self):
         """Destructor"""
         if not os.path.exists(os.path.dirname(self._data_file)):
-            os.mkdirs(os.path.dirname(self._data_file))
+            os.makedirs(os.path.dirname(self._data_file))
         with open(self._data_file, 'w') as df:
             json.dump(self._data, df)
 
