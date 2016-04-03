@@ -3,6 +3,8 @@ import os
 
 import htmlgenerator.generator
 
+from collections import OrderedDict
+
 class StatsBot:
     def __init__(self, subreddit, data_file, output_dir):
         """Basic constructor"""
@@ -21,6 +23,12 @@ class StatsBot:
     
     def generate(self):
         self._page.h1('Subreddit statistics for r/'+self._subreddit)
+        posts_subjects_ranking = OrderedDict(sorted(self._data['posts']['subject-presence'].items(), key=lambda t: t[1]))
+        del posts_subjects_ranking['None']
+        tbl_posts_subjects_ranking = self._page.table()
+        tbl_posts_subjects_ranking.tr('Flairs de posts les plus utilisés')
+        for i in posts_subjects_ranking.keys():
+            tbl_posts_subjects_ranking.tr(i)
 
 def StatsBotGenerator(config_file):
     """Generate a list-like container of StatsBot objects"""
