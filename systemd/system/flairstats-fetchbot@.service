@@ -1,0 +1,7 @@
+[Unit]
+Description=Fetch new comments on the configured subreddits
+
+[Service]
+Type=oneshot
+User=%i
+ExecStart=/usr/bin/python3 -m flairstats.fetchbot
