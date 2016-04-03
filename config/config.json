@@ -3,6 +3,7 @@
 	"bots": [{
 			"subreddit": "france",
 			"enable-comments-stats": true,
-			"data-file": "data/france-data.json"
+			"data-file": "data/france-data.json",
+			"output-dir": "data/france"
 		}]
 }
