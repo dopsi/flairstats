@@ -22,6 +22,9 @@ class FetchBot:
         self._praw = Reddit(self._user_agent)
 
     def __del__(self):
+        with os.path.dirname(self._data) as d:
+            if not os.path.exists(d):
+                os.mkdir(d)
         with open(self._data_file, 'w') as df:
             json.dump(self._data, df)
 
