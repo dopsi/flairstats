@@ -23,7 +23,7 @@ class StatsBot:
     
     def generate(self):
         self._page.h1('Subreddit statistics for r/'+self._subreddit)
-        posts_subjects_ranking = OrderedDict(sorted(self._data['posts']['subject-presence'].items(), key=lambda t: t[1]))
+        posts_subjects_ranking = OrderedDict(sorted(self._data['posts']['subject-presence'].items(), key=lambda t: t[1], reverse=True))
         del posts_subjects_ranking['None']
         tbl_posts_subjects_ranking = self._page.table()
         tbl_posts_subjects_ranking.tr('Flairs de posts les plus utilisés')
