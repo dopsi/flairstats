@@ -12,10 +12,7 @@ class FetchBot:
         """Basic constructor"""
         self._user_agent = user_agent
         self._subreddit = subreddit
-        if data_file.startswith('/'):
-            self._data_file = data_file
-        else:
-            self._data_file = os.path.join(os.getenv('HOME'), data_file)
+        self._data_file = data_file
         try:
             with open(self._data_file) as df:
                 self._data = json.load(df)
