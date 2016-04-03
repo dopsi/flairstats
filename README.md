@@ -17,7 +17,7 @@ Version 2 of flairstats will implement more features, in particular :
 Project status
 --------------
 
-The development branch can be fount 
+The development branch can be found 
 [here](https://github.com/dopsi/flairstats/tree/v2-dev).
 
 Features are :
