@@ -19,6 +19,13 @@ class FetchBot:
         except (FileNotFoundError,json.decoder.JSONDecodeError):
             self._data = json.loads('{"comments":{},"posts":{}}')
 
+        try:
+            if self._data['subreddit'] != self._subreddit:
+                raise ValueError('The data file does not correspond the subreddit r/'+self._subreddit)
+        except KeyError:
+            print("Setting the subreddit value")
+            self._data['subreddit'] = self._subreddit
+
         self._praw = Reddit(self._user_agent)
 
     def __del__(self):
