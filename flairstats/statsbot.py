@@ -35,7 +35,9 @@ class StatsBot:
         for i in posts_subjects_ranking.keys():
             tbl_posts_subjects_ranking.tr(i)
         duration = time.time() - start_time
-        duration_string = ' (took '+display.float(duration, 3)+' seconds).'
+        duration_string = ' (took '+display.float(duration, 3)+' seconds). '
+        duration_string += str(self._data['comments']['count'])+' comments analysed, '
+        duration_string += str(self._data['posts']['count'])+' posts analysed.'
         self._page.p("Generated at "+datetime.datetime.now().strftime('%Y-%m-%d %H:%M %Z')+duration_string.format(duration))
 
 def StatsBotGenerator(config_file):
