@@ -4,6 +4,9 @@ import os
 import htmlgenerator.generator
 
 from collections import OrderedDict
+import datetime
+import time
+import math
 
 class StatsBot:
     def __init__(self, subreddit, data_file, output_dir):
@@ -22,6 +25,7 @@ class StatsBot:
         self._page.write(os.path.join(self._output_dir, 'index.html'))
     
     def generate(self):
+        start_time = time.time()
         self._page.h1('Subreddit statistics for r/'+self._subreddit)
         posts_subjects_ranking = OrderedDict(sorted(self._data['posts']['subject-presence'].items(), key=lambda t: t[1], reverse=True))
         del posts_subjects_ranking['None']
@@ -29,6 +33,9 @@ class StatsBot:
         tbl_posts_subjects_ranking.tr('Flairs de posts les plus utilisés')
         for i in posts_subjects_ranking.keys():
             tbl_posts_subjects_ranking.tr(i)
+        duration = time.time() - start_time
+        duration_string = ' (took {0:.'+'{:.0f}'.format(max(math.fabs(math.floor(math.log10(duration))),3))+'f} seconds).'
+        self._page.p("Generated at "+datetime.datetime.now().strftime('%Y-%m-%d %H:%M %Z')+duration_string.format(duration))
 
 def StatsBotGenerator(config_file):
     """Generate a list-like container of StatsBot objects"""
