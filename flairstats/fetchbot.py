@@ -44,9 +44,7 @@ class FetchBot:
 
         is_first = True
 
-        try:
-            self._data[key]['first']
-        except:
+        if 'first' not in self._data[key]:
             self._data[key]['first'] = float(round(time.time()))
 
         try:
