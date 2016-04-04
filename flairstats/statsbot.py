@@ -6,7 +6,8 @@ import htmlgenerator.generator
 from collections import OrderedDict
 import datetime
 import time
-import math
+
+from .tools import display
 
 class StatsBot:
     def __init__(self, subreddit, data_file, output_dir):
@@ -34,7 +35,7 @@ class StatsBot:
         for i in posts_subjects_ranking.keys():
             tbl_posts_subjects_ranking.tr(i)
         duration = time.time() - start_time
-        duration_string = ' (took {0:.'+'{:.0f}'.format(max(math.fabs(math.floor(math.log10(duration))),3))+'f} seconds).'
+        duration_string = ' (took '+display.float(duration, 3)+' seconds).'
         self._page.p("Generated at "+datetime.datetime.now().strftime('%Y-%m-%d %H:%M %Z')+duration_string.format(duration))
 
 def StatsBotGenerator(config_file):
