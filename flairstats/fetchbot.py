@@ -60,7 +60,7 @@ class FetchBot:
             if it.created <= self._data[key]['last']:
                 break
 
-            storage.dictvar(self._data, 'count', 1, 1)
+            storage.dictvar(self._data[key], 'count', 1, 1)
 
             try:
                 if str(it.author) not in self._data['unique-users']:
