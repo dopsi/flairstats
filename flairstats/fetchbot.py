@@ -46,8 +46,7 @@ class FetchBot:
 
         is_first = True
 
-        if 'first' not in self._data[key]:
-            self._data[key]['first'] = float(round(time.time()))
+        storage.dict_check_key(self._data[key], 'first', float(round(time.time())))
 
         try:
             new_creation_limit = self._data[key]['last']
@@ -77,19 +76,16 @@ class FetchBot:
                 
 
             if it.author_flair_text:
-                if 'flair-presence' not in self._data[key]:
-                    self._data[key]['flair-presence'] = dict()
+                storage.dict_check_key(self._data[key], 'flair-presence', dict())
 
                 storage.dictvar(self._data[key]['flair-presence'], str(it.author_flair_text), 1, 1)
 
             if key == 'posts':
-                if 'subject-presence' not in self._data[key]:
-                    self._data[key]['subject-presence'] = dict()
+                storage.dict_check_key(self._data[key], 'subject-presence', dict())
 
                 storage.dictvar(self._data[key]['subject-presence'], str(it.link_flair_text), 1, 1)
 
-                if 'subject-presence' not in self._data['unique-users'][str(it.author)]:
-                    self._data['unique-users'][str(it.author)]['subject-presence'] = dict()
+                storage.dict_check_key(self._data['unique-users'][str(it.author)], 'subject-presence', dict())
 
                 storage.dictvar(self._data['unique-users'][str(it.author)]['subject-presence'], str(it.link_flair_text), 1, 1)
         
