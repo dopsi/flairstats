@@ -66,17 +66,20 @@ class FetchBot:
             except KeyError:
                 self._data[key]['count'] = 1
 
-            if it.author_flair_text:
-                try:
-                    if str(it.author) not in self._data[key]['unique-users']:
-                        self._data[key]['unique-users'][str(it.author)] = {'flair': it.author_flair_text, key: 1}
-                    else:
-                        self._data[key]['unique-users'][str(it.author)][key] += 1
-                except KeyError:
-                    self._data[key]['unique-users'] = dict()
-                    self._data[key]['unique-users'][str(it.author)] = {'flair': it.author_flair_text, key: 1}
-                    
+            try:
+                if str(it.author) not in self._data['unique-users']:
+                    self._data['unique-users'][str(it.author)] = {'flair': it.author_flair_text, key: 1}
+                else:
+                    try:
+                        self._data['unique-users'][str(it.author)][key] += 1
+                    except KeyError:
+                        self._data['unique-users'][str(it.author)][key] = 1
+            except KeyError:
+                self._data['unique-users'] = dict()
+                self._data['unique-users'][str(it.author)] = {'flair': it.author_flair_text, key: 1}
+                
 
+            if it.author_flair_text:
                 if 'flair-presence' not in self._data[key]:
                     self._data[key]['flair-presence'] = dict()
 
@@ -93,6 +96,14 @@ class FetchBot:
                     self._data[key]['subject-presence'][str(it.link_flair_text)] += 1
                 except KeyError:
                     self._data[key]['subject-presence'][str(it.link_flair_text)] = 1
+
+                if 'subject-presence' not in self._data['unique-users'][str(it.author)]:
+                    self._data['unique-users'][str(it.author)]['subject-presence'] = dict()
+
+                try:
+                    self._data['unique-users'][str(it.author)]['subject-presence'][str(it.link_flair_text)] += 1
+                except KeyError:
+                    self._data['unique-users'][str(it.author)]['subject-presence'][str(it.link_flair_text)] = 1
         
         self._data[key]['last'] = new_creation_limit
 
