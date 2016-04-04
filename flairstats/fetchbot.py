@@ -69,11 +69,13 @@ class FetchBot:
             if it.author_flair_text:
                 try:
                     if str(it.author) not in self._data[key]['unique-users']:
-                        self._data[key]['unique-users'][str(it.author)] = it.author_flair_text
+                        self._data[key]['unique-users'][str(it.author)] = {'flair': it.author_flair_text, key: 1}
+                    else:
+                        self._data[key]['unique-users'][str(it.author)][key] += 1
                 except KeyError:
                     self._data[key]['unique-users'] = dict()
-                    if str(it.author) not in self._data[key]['unique-users']:
-                        self._data[key]['unique-users'][str(it.author)] = it.author_flair_text
+                    self._data[key]['unique-users'][str(it.author)] = {'flair': it.author_flair_text, key: 1}
+                    
 
                 if 'flair-presence' not in self._data[key]:
                     self._data[key]['flair-presence'] = dict()
