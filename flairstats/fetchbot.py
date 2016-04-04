@@ -5,6 +5,8 @@ import os
 
 import time
 
+from .tools import storage
+
 class FetchBot:
     """Bot to fetch the subreddit data."""
 
@@ -59,10 +61,7 @@ class FetchBot:
             if it.created <= self._data[key]['last']:
                 break
 
-            try:
-                self._data[key]['count'] += 1
-            except KeyError:
-                self._data[key]['count'] = 1
+            storage.dictvar(self._data, 'count', 1, 1)
 
             try:
                 if str(it.author) not in self._data['unique-users']:
@@ -81,27 +80,18 @@ class FetchBot:
                 if 'flair-presence' not in self._data[key]:
                     self._data[key]['flair-presence'] = dict()
 
-                try:
-                    self._data[key]['flair-presence'][str(it.author_flair_text)] += 1
-                except KeyError:
-                    self._data[key]['flair-presence'][str(it.author_flair_text)] = 1
+                storage.dictvar(self._data[key]['flair-presence'], str(it.author_flair_text), 1, 1)
 
             if key == 'posts':
                 if 'subject-presence' not in self._data[key]:
                     self._data[key]['subject-presence'] = dict()
 
-                try:
-                    self._data[key]['subject-presence'][str(it.link_flair_text)] += 1
-                except KeyError:
-                    self._data[key]['subject-presence'][str(it.link_flair_text)] = 1
+                storage.dictvar(self._data[key]['subject-presence'], str(it.link_flair_text), 1, 1)
 
                 if 'subject-presence' not in self._data['unique-users'][str(it.author)]:
                     self._data['unique-users'][str(it.author)]['subject-presence'] = dict()
 
-                try:
-                    self._data['unique-users'][str(it.author)]['subject-presence'][str(it.link_flair_text)] += 1
-                except KeyError:
-                    self._data['unique-users'][str(it.author)]['subject-presence'][str(it.link_flair_text)] = 1
+                storage.dictvar(self._data['unique-users'][str(it.author)]['subject-presence'], str(it.link_flair_text), 1, 1)
         
         self._data[key]['last'] = new_creation_limit
 
