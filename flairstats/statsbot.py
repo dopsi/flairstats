@@ -31,9 +31,9 @@ class StatsBot:
         posts_subjects_ranking = OrderedDict(sorted(self._data['posts']['subject-presence'].items(), key=lambda t: t[1], reverse=True))
         del posts_subjects_ranking['None']
         tbl_posts_subjects_ranking = self._page.section().table()
-        tbl_posts_subjects_ranking.tr('Flairs de posts les plus utilisés')
-        for i in posts_subjects_ranking.keys():
-            tbl_posts_subjects_ranking.tr(i)
+        tbl_posts_subjects_ranking.tr().td('Flairs de posts les plus utilisés', colspan=2)
+        for key, value in posts_subjects_ranking.items():
+            tbl_posts_subjects_ranking.tr(value, key)
         duration = time.time() - start_time
         duration_string = ' (took '+display.float(duration, 3)+' seconds). '
         duration_string += str(self._data['comments']['count'])+' comments analysed, '
