@@ -24,10 +24,11 @@ class StatsBot:
         if not os.path.exists(self._output_dir):
             os.makedirs(self._output_dir)
         self._page.write(os.path.join(self._output_dir, 'index.html'))
+        self._page.title = 'Statistiques de r/'+self._subreddit
     
     def generate(self):
         start_time = time.time()
-        self._page.header().h1('Subreddit statistics for r/'+self._subreddit)
+        self._page.header().h1('Statistiques de r/'+self._subreddit)
 
         section = self._page.section()
         posts_subjects_ranking = OrderedDict(sorted(self._data['posts']['subject-presence'].items(), key=lambda t: t[1], reverse=True))
@@ -50,10 +51,13 @@ class StatsBot:
             tbl_comments_flairs_ranking.tr(value, key)
 
         duration = time.time() - start_time
-        duration_string = ' (took '+display.float(duration, 3)+' seconds). '
-        duration_string += str(self._data['comments']['count'])+' comments analysed, '
-        duration_string += str(self._data['posts']['count'])+' posts analysed.'
-        self._page.footer().p("Generated at "+datetime.datetime.now().strftime('%Y-%m-%d %H:%M %Z')+duration_string.format(duration))
+        duration_string = ' (en '+display.float(duration, 3)+' secondes). '
+        duration_string += str(self._data['comments']['count'])+' commentaires analysés, '
+        duration_string += str(self._data['posts']['count'])+' posts analysés.'
+        foot = self._page.footer().p("Généré le "+datetime.datetime.now().strftime('%Y-%m-%d à %H:%M %Z')+duration_string.format(duration))
+        foot.append(' Code source disponible sur ')
+        foot.append(htmlgenerator.markup.HtmlAnchor('GitHub', 'http://github.com/dopsi/flairstats'))
+        foot.append('.')
 
 def StatsBotGenerator(config_file):
     """Generate a list-like container of StatsBot objects"""
