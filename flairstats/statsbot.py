@@ -26,27 +26,27 @@ class StatsBot:
             self._data = json.load(df)
 
         self._page = htmlgenerator.generator.HtmlGenerator()
+        self._page.title = 'Statistiques de r/France'
 
     def __del__(self):
         self._page.write('index.html')
-        self._page.title = 'Statistiques de r/'+self._subreddit
     
     def generate(self):
         start_time = time.time()
-        self._page.header().h1('Statistiques de r/'+self._subreddit)
+        self._page.header().h1('Statistiques de r/'+self._subreddit, align='center')
 
 # Subject flairs
         section = self._page.section()
         posts_subjects_ranking = OrderedDict(sorted(self._data['posts']['subject-presence'].items(), key=lambda t: t[1]))
         del posts_subjects_ranking['None']
         posts_subjects_line_chart = pygal.HorizontalBar()
-        posts_subjects_line_chart.title = 'Subject ranking'
+        posts_subjects_line_chart.title = 'Distribution des catégories de posts'
         posts_subjects_line_chart.x_labels = posts_subjects_ranking.keys()
-        posts_subjects_line_chart.add('Subjects', posts_subjects_ranking.values())
+        posts_subjects_line_chart.add('Posts', posts_subjects_ranking.values())
         with open('posts_subjects_ranking.svg', 'wb') as svgfile:
             svgfile.write(posts_subjects_line_chart.render())
 
-        section.embed(src='posts_subjects_ranking.svg', tipe='image/svg+xml', width='50%')
+        section.embed(src='posts_subjects_ranking.svg', tipe='image/svg+xml', style='margin-left: 25%;', width='50%')
 
 # User flairs
         section = self._page.section()
@@ -72,10 +72,10 @@ class StatsBot:
                 tooltip_font_size=7)
 
         user_flairs_line_chart = pygal.HorizontalBar(height=12*len(posts_flairs_ranking), style=custom_style)
-        user_flairs_line_chart.title = 'Subject ranking'
+        user_flairs_line_chart.title = 'Distribution des flairs utilisateurs (en % du total)'
         user_flairs_line_chart.x_labels = posts_flairs_ranking.keys()
         user_flairs_line_chart.add('Posts', posts_flairs_ranking.values())
-        user_flairs_line_chart.add('Comments', comments_flairs_ranking.values())
+        user_flairs_line_chart.add('Commentaires', comments_flairs_ranking.values())
         with open('user_flairs_ranking.svg', 'wb') as svgfile:
             svgfile.write(user_flairs_line_chart.render())
 
