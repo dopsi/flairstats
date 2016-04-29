@@ -1,11 +1,11 @@
 [Unit]
-Description=Timer fetch subreddit comments every 5 minutes
+Description=Schedule StatsBot runs
 
 [Timer]
 OnBootSec=1min
 OnActiveSec=1min
 OnUnitActiveSec=5min
-Unit=flairstats.service
+Unit=flairstats-statsbot@%i.service
 
 [Install]
 WantedBy=default.target

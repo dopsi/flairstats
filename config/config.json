@@ -1,0 +1,9 @@
+{
+	"user-agent": "Subreddit flairs monitor by /u/dopsi v0.0.1 Url: http://github.com/dopsi/flairstats",
+	"bots": [{
+			"subreddit": "france",
+			"enable-comments-stats": true,
+			"data-file": "data/france-data.json",
+			"output-dir": "data/france"
+		}]
+}

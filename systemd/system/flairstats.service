@@ -1,7 +1,0 @@
-[Unit]
-Description=Fetch new comments on the specified subreddit
-
-[Service]
-Type=oneshot
-ExecStart=/usr/bin/flairstats.py france /home/dopsi/websites/flairstats
-ExecStart=/usr/bin/flairplot.py /home/dopsi/websites/flairstats

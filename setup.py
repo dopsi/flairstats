@@ -17,14 +17,11 @@ setup(
     license = "MIT",
     keywords = "reddit statistics",
     url = "http://github.com/dopsi/flairstats",
-    scripts = [
-        'flairstats.py',
-        'flairplot.py'
-    ],
+    packages=['flairstats'],
     data_files=[
-        ('lib/systemd/system', ['systemd/system/flairstats.service', 'systemd/system/flairstats.timer']),
-        ('share/doc/flairstats', ['flairs.json']),
-        ('share/licences/flairstats', ['LICENSE'])
+        ('share/doc/flairstats/config', ['config/config.json']),
+        ('lib/systemd/system', ['systemd/system/flairstats-fetchbot@.service', 'systemd/system/flairstats-fetchbot@.timer']),
+        ('lib/systemd/system', ['systemd/system/flairstats-statsbot@.service', 'systemd/system/flairstats-statsbot@.timer'])
     ],
     long_description=read('README.md'),
     classifiers=[
@@ -33,6 +30,8 @@ setup(
         "License :: OSI Approved :: MIT License",
     ],
     install_dependencies=[
-        'praw'
+        'htmlgenerator',
+        'praw',
+        'pygal'
     ]
 )

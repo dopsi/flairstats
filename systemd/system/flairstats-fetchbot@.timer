@@ -1,0 +1,11 @@
+[Unit]
+Description=Schedule FetchBot runs
+
+[Timer]
+OnBootSec=1min
+OnActiveSec=1min
+OnUnitActiveSec=5min
+Unit=flairstats-fetchbot@%i.service
+
+[Install]
+WantedBy=default.target

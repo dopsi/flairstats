@@ -4,10 +4,31 @@ flairstats
 This project started as a simple script fetching the latest comments
 on a subreddit and compiling their authors' flairs into a bar chart.
 
-Version 2 of flairstats will implement more features.
+Version 2 of flairstats does implement more features, in particular :
+
+* getting the statistics for a given period of time or number of comments
+* getting statistics about unique users posting
+* getting statistics about the activity during the day of flair or a user
+* have a ranking of the most used flairs overall and in function of the time
+* taking snapshots of the current data
+* data backup in a dbm file
+* unlike v1, also take in account new posts
+
+Project status
+--------------
 
 The development branch can be found 
 [here](https://github.com/dopsi/flairstats/tree/v2-dev).
+
+Features are :
+
+- [x] Comments flairs presence statistics (as in V1)
+- [x] Comments unique users flairs statistics
+- [x] Post authors flairs presence statistics
+- [x] Post flairs presence statistics
+- [x] Posts unique users flairs statistics
+- [x] Provide graphs
+- [x] Pretty HTML output
 
 Versionning
 -----------

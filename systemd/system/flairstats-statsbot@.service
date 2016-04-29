@@ -1,0 +1,7 @@
+[Unit]
+Description=Generate new statistic on the configured subreddits
+
+[Service]
+Type=oneshot
+User=%i
+ExecStart=/usr/bin/python3 -m flairstats.statsbot
