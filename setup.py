@@ -10,7 +10,7 @@ def read(fname):
 
 setup(
     name = "flairstats",
-    version = "0.0.1",
+    version = "2.0.0",
     author = "Simon Doppler",
     author_email = "dopsi.dev@gmail.com",
     description = ("Get subreddit statistics"),
