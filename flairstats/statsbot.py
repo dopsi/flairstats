@@ -69,7 +69,9 @@ class StatsBot:
 
         custom_style = Style(
                 label_font_size=6,
-                tooltip_font_size=7)
+                tooltip_font_size=7,
+                legend_font_size=8
+            )
 
         user_flairs_line_chart = pygal.HorizontalBar(height=12*len(posts_flairs_ranking), style=custom_style)
         user_flairs_line_chart.title = 'Distribution des flairs utilisateurs (en % du total)'
