@@ -17,7 +17,7 @@ setup(
     license = "MIT",
     keywords = "reddit statistics",
     url = "http://github.com/dopsi/flairstats",
-    packages=['flairstats'],
+    packages=['flairstats', 'flairstats.tools'],
     data_files=[
         ('share/doc/flairstats/config', ['config/config.json']),
         ('lib/systemd/system', ['systemd/system/flairstats-fetchbot@.service', 'systemd/system/flairstats-fetchbot@.timer']),
