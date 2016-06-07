@@ -48,40 +48,27 @@ class StatsBot:
 
         section.embed(src='posts_subjects_ranking.svg', tipe='image/svg+xml', style='margin-left: 25%;', width='50%')
 
-# User flairs
+# User comments flairs
         section = self._page.section()
-        posts_flairs_ranking = self._data['posts']['flair-presence']
-        comments_flairs_ranking = self._data['comments']['flair-presence']
+        posts_flairs_ranking = OrderedDict(sorted(self._data['posts']['flair-presence'].items(), key=lambda t: t[1]))
+        comments_flairs_ranking = OrderedDict(sorted(self._data['comments']['flair-presence'].items(), key=lambda t: t[1]))
         
-        for key in posts_flairs_ranking.keys():
-            if key not in comments_flairs_ranking:
-                comments_flairs_ranking[key]=0
+        user_comment_flairs_line_chart = pygal.HorizontalBar(height=12*len(comments_flairs_ranking))
+        user_comment_flairs_line_chart.title = 'Distribution des flairs utilisateurs (en % du total des commentaires)'
+        user_comment_flairs_line_chart.x_labels = comments_flairs_ranking.keys()
+        user_comment_flairs_line_chart.add('Commentaires', comments_flairs_ranking.values())
+        with open('user_comments_flairs_ranking.svg', 'wb') as svgfile:
+            svgfile.write(user_comment_flairs_line_chart.render())
 
-        for key in comments_flairs_ranking.keys():
-            if key not in posts_flairs_ranking:
-                posts_flairs_ranking[key]=0
+        user_comment_flairs_line_chart = pygal.HorizontalBar(height=12*len(posts_flairs_ranking))
+        user_comment_flairs_line_chart.title = 'Distribution des flairs utilisateurs (en % du total des posts)'
+        user_comment_flairs_line_chart.x_labels = posts_flairs_ranking.keys()
+        user_comment_flairs_line_chart.add('Commentaires', posts_flairs_ranking.values())
+        with open('user_posts_flairs_ranking.svg', 'wb') as svgfile:
+            svgfile.write(user_comment_flairs_line_chart.render())
 
-        for key in comments_flairs_ranking.keys():
-            comments_flairs_ranking[key] /= (self._data['comments']['count']/100)
-
-        for key in posts_flairs_ranking.keys():
-            posts_flairs_ranking[key] /= (self._data['posts']['count']/100)
-
-        custom_style = Style(
-                label_font_size=6,
-                tooltip_font_size=7,
-                legend_font_size=8
-            )
-
-        user_flairs_line_chart = pygal.HorizontalBar(height=12*len(posts_flairs_ranking), style=custom_style)
-        user_flairs_line_chart.title = 'Distribution des flairs utilisateurs (en % du total)'
-        user_flairs_line_chart.x_labels = posts_flairs_ranking.keys()
-        user_flairs_line_chart.add('Posts', posts_flairs_ranking.values())
-        user_flairs_line_chart.add('Commentaires', comments_flairs_ranking.values())
-        with open('user_flairs_ranking.svg', 'wb') as svgfile:
-            svgfile.write(user_flairs_line_chart.render())
-
-        section.embed(src='user_flairs_ranking.svg', tipe='image/svg+xml')
+        section.embed(src='user_comments_flairs_ranking.svg', tipe='image/svg+xml')
+        section.embed(src='user_posts_flairs_ranking.svg', tipe='image/svg+xml')
 
 # Footer
         duration = time.time() - start_time
