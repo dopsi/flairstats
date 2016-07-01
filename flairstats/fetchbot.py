@@ -39,7 +39,7 @@ class FetchBot:
     def fetch(self):
         """Fetching function"""
         self._fetch(self._praw.get_comments(self._subreddit, limit=500), 'comments')
-        self._fetch(self._praw.get_subreddit('france').get_new(limit=500), 'posts')
+        self._fetch(self._praw.get_subreddit(self._subreddit).get_new(limit=500), 'posts')
 
     def _fetch(self, submissions, key):
         """Generic fetching function"""

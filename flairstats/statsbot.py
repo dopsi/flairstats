@@ -26,7 +26,7 @@ class StatsBot:
             self._data = json.load(df)
 
         self._page = htmlgenerator.generator.HtmlGenerator()
-        self._page.title = 'Statistiques de r/France'
+        self._page.title = 'Statistiques de '+self._subreddit
 
     def __del__(self):
         self._page.write('index.html')
