@@ -4,8 +4,10 @@ import json
 import os
 
 import time
+import datetime
 
 from .tools import storage
+from .tools import display
 
 class FetchBot:
     """Bot to fetch the subreddit data."""
@@ -90,6 +92,11 @@ class FetchBot:
                 storage.dictvar(self._data['unique-users'][str(it.author)]['subject-presence'], str(it.link_flair_text), 1, 1)
                 storage.dict_check_key(self._data[key], 'domain-presence', dict())
                 storage.dictvar(self._data[key]['domain-presence'], str(it.domain), 1, 1)
+
+            storage.dict_check_key(self._data[key], 'time', dict())
+            time_datetime = datetime.datetime.fromtimestamp(float(it.created_utc))
+            time_str = str(time_datetime.hour).zfill(2)+str(time_datetime.minute).zfill(2)
+            storage.dictvar(self._data[key]['time'], time_str, 1, 1)
         
         self._data[key]['last'] = new_creation_limit
 
