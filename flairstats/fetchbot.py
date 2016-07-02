@@ -88,6 +88,8 @@ class FetchBot:
                 storage.dict_check_key(self._data['unique-users'][str(it.author)], 'subject-presence', dict())
 
                 storage.dictvar(self._data['unique-users'][str(it.author)]['subject-presence'], str(it.link_flair_text), 1, 1)
+                storage.dict_check_key(self._data[key], 'domain-presence', dict())
+                storage.dictvar(self._data[key]['domain-presence'], str(it.domain), 1, 1)
         
         self._data[key]['last'] = new_creation_limit
 
