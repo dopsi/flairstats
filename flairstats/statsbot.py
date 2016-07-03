@@ -36,39 +36,45 @@ class StatsBot:
         self._page.header().h1('Statistiques de r/'+self._subreddit, align='center')
 
 # Subject flairs
-        section = self._page.section()
-        posts_subjects_ranking = OrderedDict(sorted(self._data['posts']['subject-presence'].items(), key=lambda t: t[1]))
-        del posts_subjects_ranking['None']
-        posts_subjects_line_chart = pygal.HorizontalBar()
-        posts_subjects_line_chart.title = 'Distribution des catégories de posts'
-        posts_subjects_line_chart.x_labels = posts_subjects_ranking.keys()
-        posts_subjects_line_chart.add('Posts', posts_subjects_ranking.values())
-        with open('posts_subjects_ranking.svg', 'wb') as svgfile:
-            svgfile.write(posts_subjects_line_chart.render())
-
-        section.embed(src='posts_subjects_ranking.svg', tipe='image/svg+xml', style='margin-left: 25%;', width='50%')
+        try:
+            section = self._page.section()
+            posts_subjects_ranking = OrderedDict(sorted(self._data['posts']['subject-presence'].items(), key=lambda t: t[1]))
+            del posts_subjects_ranking['None']
+            posts_subjects_line_chart = pygal.HorizontalBar()
+            posts_subjects_line_chart.title = 'Distribution des catégories de posts'
+            posts_subjects_line_chart.x_labels = posts_subjects_ranking.keys()
+            posts_subjects_line_chart.add('Posts', posts_subjects_ranking.values())
+            with open('posts_subjects_ranking.svg', 'wb') as svgfile:
+                svgfile.write(posts_subjects_line_chart.render())
+    
+            section.embed(src='posts_subjects_ranking.svg', tipe='image/svg+xml', style='margin-left: 25%;', width='50%')
+        except KeyError:
+            section.p('No subject flairs available')
 
 # User comments flairs
-        section = self._page.section()
-        posts_flairs_ranking = OrderedDict(sorted(self._data['posts']['flair-presence'].items(), key=lambda t: t[1]))
-        comments_flairs_ranking = OrderedDict(sorted(self._data['comments']['flair-presence'].items(), key=lambda t: t[1]))
-        
-        user_comment_flairs_line_chart = pygal.HorizontalBar(height=12*len(comments_flairs_ranking))
-        user_comment_flairs_line_chart.title = 'Distribution des flairs utilisateurs (en % du total des commentaires)'
-        user_comment_flairs_line_chart.x_labels = comments_flairs_ranking.keys()
-        user_comment_flairs_line_chart.add('Commentaires', comments_flairs_ranking.values())
-        with open('user_comments_flairs_ranking.svg', 'wb') as svgfile:
-            svgfile.write(user_comment_flairs_line_chart.render())
-
-        user_comment_flairs_line_chart = pygal.HorizontalBar(height=12*len(posts_flairs_ranking))
-        user_comment_flairs_line_chart.title = 'Distribution des flairs utilisateurs (en % du total des posts)'
-        user_comment_flairs_line_chart.x_labels = posts_flairs_ranking.keys()
-        user_comment_flairs_line_chart.add('Commentaires', posts_flairs_ranking.values())
-        with open('user_posts_flairs_ranking.svg', 'wb') as svgfile:
-            svgfile.write(user_comment_flairs_line_chart.render())
-
-        section.embed(src='user_comments_flairs_ranking.svg', tipe='image/svg+xml')
-        section.embed(src='user_posts_flairs_ranking.svg', tipe='image/svg+xml')
+        try:
+            section = self._page.section()
+            posts_flairs_ranking = OrderedDict(sorted(self._data['posts']['flair-presence'].items(), key=lambda t: t[1]))
+            comments_flairs_ranking = OrderedDict(sorted(self._data['comments']['flair-presence'].items(), key=lambda t: t[1]))
+            
+            user_comment_flairs_line_chart = pygal.HorizontalBar(height=12*len(comments_flairs_ranking))
+            user_comment_flairs_line_chart.title = 'Distribution des flairs utilisateurs (en % du total des commentaires)'
+            user_comment_flairs_line_chart.x_labels = comments_flairs_ranking.keys()
+            user_comment_flairs_line_chart.add('Commentaires', comments_flairs_ranking.values())
+            with open('user_comments_flairs_ranking.svg', 'wb') as svgfile:
+                svgfile.write(user_comment_flairs_line_chart.render())
+    
+            user_comment_flairs_line_chart = pygal.HorizontalBar(height=12*len(posts_flairs_ranking))
+            user_comment_flairs_line_chart.title = 'Distribution des flairs utilisateurs (en % du total des posts)'
+            user_comment_flairs_line_chart.x_labels = posts_flairs_ranking.keys()
+            user_comment_flairs_line_chart.add('Commentaires', posts_flairs_ranking.values())
+            with open('user_posts_flairs_ranking.svg', 'wb') as svgfile:
+                svgfile.write(user_comment_flairs_line_chart.render())
+    
+            section.embed(src='user_comments_flairs_ranking.svg', tipe='image/svg+xml')
+            section.embed(src='user_posts_flairs_ranking.svg', tipe='image/svg+xml')
+        except KeyError:
+            section.p('No user comment flair')
 
 # Footer
         duration = time.time() - start_time
