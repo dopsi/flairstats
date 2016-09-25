@@ -4,12 +4,21 @@ import os
 import htmlgenerator.generator
 
 from collections import OrderedDict
+from itertools import islice
 import datetime
 import time
 import pygal
 from pygal.style import Style
 
 from .tools import display
+
+def time_flatten(data, factor=1):
+    ret = [0 for _ in range(24)]
+
+    for key, value in data.items():
+        ret[int(int(key)/100)] += value/factor
+
+    return ret
 
 class StatsBot:
     def __init__(self, subreddit, data_file, output_dir):
@@ -35,48 +44,72 @@ class StatsBot:
         start_time = time.time()
         self._page.header().h1('Statistiques de r/'+self._subreddit, align='center')
 
-# Subject flairs
-        try:
-            section = self._page.section()
-            posts_subjects_ranking = OrderedDict(sorted(self._data['posts']['subject-presence'].items(), key=lambda t: t[1]))
-            del posts_subjects_ranking['None']
-            posts_subjects_line_chart = pygal.HorizontalBar()
-            posts_subjects_line_chart.title = 'Distribution des catégories de posts'
-            posts_subjects_line_chart.x_labels = posts_subjects_ranking.keys()
-            posts_subjects_line_chart.add('Posts', posts_subjects_ranking.values())
-            with open('posts_subjects_ranking.svg', 'wb') as svgfile:
-                svgfile.write(posts_subjects_line_chart.render())
-    
-            section.embed(src='posts_subjects_ranking.svg', tipe='image/svg+xml', style='margin-left: 25%;', width='50%')
-        except KeyError:
-            section.p('No subject flairs available')
+        section = self._page.section()
 
-# User comments flairs
+        line_chart = pygal.Radar()
+        line_chart.title = 'Activité en fonction de l\'heure'
+        line_chart.x_labels = map(str, range(0, 24))
+        line_chart.add('Posts', time_flatten(self._data['posts']['time']['all'], self._data['posts']['count']))
+        line_chart.add('Commentaires', time_flatten(self._data['comments']['time']['all'], self._data['comments']['count']))
+        with open('activity.svg', 'wb') as act:
+            act.write(line_chart.render())
+
+        section.embed(src='activity.svg', id='activity', tipe='image/svg+xml', style='margin-left: 25%;', width='50%')
+
+        # User flairs
+
+        ## Comments
+
         try:
+            posts_flairs_ranking = OrderedDict(sorted(self._data['posts']['flair-presence'].items(),key=lambda t: t[1]),reverse=True)
+        except KeyError:
+            pass
+        else:
             section = self._page.section()
-            posts_flairs_ranking = OrderedDict(sorted(self._data['posts']['flair-presence'].items(), key=lambda t: t[1]))
-            comments_flairs_ranking = OrderedDict(sorted(self._data['comments']['flair-presence'].items(), key=lambda t: t[1]))
+            pie_chart = pygal.HorizontalBar()
+            pie_chart.title = 'Distribution des flairs des posteurs'
+
+            posts_flairs_ref_value = max(posts_flairs_ranking.values())/5
+            posts_remainder = 0
+
+            data_for_graph = OrderedDict()
+            for k, v in posts_flairs_ranking.items():
+                if float(v) >= posts_flairs_ref_value:
+                    try:
+                        data_for_graph[k] =  v
+                    except:
+                        raise
             
-            user_comment_flairs_line_chart = pygal.HorizontalBar(height=12*len(comments_flairs_ranking))
-            user_comment_flairs_line_chart.title = 'Distribution des flairs utilisateurs (en % du total des commentaires)'
-            user_comment_flairs_line_chart.x_labels = comments_flairs_ranking.keys()
-            user_comment_flairs_line_chart.add('Commentaires', comments_flairs_ranking.values())
-            with open('user_comments_flairs_ranking.svg', 'wb') as svgfile:
-                svgfile.write(user_comment_flairs_line_chart.render())
-    
-            user_comment_flairs_line_chart = pygal.HorizontalBar(height=12*len(posts_flairs_ranking))
-            user_comment_flairs_line_chart.title = 'Distribution des flairs utilisateurs (en % du total des posts)'
-            user_comment_flairs_line_chart.x_labels = posts_flairs_ranking.keys()
-            user_comment_flairs_line_chart.add('Commentaires', posts_flairs_ranking.values())
-            with open('user_posts_flairs_ranking.svg', 'wb') as svgfile:
-                svgfile.write(user_comment_flairs_line_chart.render())
-    
-            section.embed(src='user_comments_flairs_ranking.svg', tipe='image/svg+xml')
-            section.embed(src='user_posts_flairs_ranking.svg', tipe='image/svg+xml')
-        except KeyError:
-            section.p('No user comment flair')
+            pie_chart.x_labels = data_for_graph.keys()
+            pie_chart.add('Poster flairs', data_for_graph.values())
 
-# Footer
+            with open('posts_flairs.svg', 'wb') as posts_flairs:
+                posts_flairs.write(pie_chart.render())
+            
+            section.embed(src='posts_flairs.svg', id='posts_subjects', tipe='image/svg+xml', style='margin-left: 25%;', width='50%')
+
+        # Post flairs
+
+        try:
+            posts_subjects_ranking = OrderedDict(sorted(self._data['posts']['subject-presence'].items(), key=lambda t: t[1]))
+        except KeyError:
+            pass
+        else:
+            section = self._page.section()
+            try:
+                del posts_subjects_ranking['None']
+            except KeyError:
+                pass
+            bar_chart = pygal.HorizontalBar()
+            bar_chart.title = 'Distribution des catégories de posts'
+
+            bar_chart.x_labels = posts_subjects_ranking.keys()
+            bar_chart.add('Posts', posts_subjects_ranking.values())
+            with open('posts_subjects.svg', 'wb') as posts_subjects:
+                posts_subjects.write(bar_chart.render())
+            
+            section.embed(src='posts_subjects.svg', id='posts_subjects', tipe='image/svg+xml', style='margin-left: 25%;', width='50%')
+
         duration = time.time() - start_time
         duration_string = ' (en '+display.float(duration, 3)+' secondes). '
         duration_string += str(self._data['comments']['count'])+' commentaires analysés, '
