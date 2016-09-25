@@ -60,32 +60,70 @@ class StatsBot:
         ## Comments
 
         try:
-            posts_flairs_ranking = OrderedDict(sorted(self._data['posts']['flair-presence'].items(),key=lambda t: t[1]),reverse=True)
+            user_flairs_ranking = OrderedDict(sorted(self._data['comments']['flair-presence'].items(),key=lambda t: t[1],reverse=True))
         except KeyError:
             pass
         else:
             section = self._page.section()
-            pie_chart = pygal.HorizontalBar()
-            pie_chart.title = 'Distribution des flairs des posteurs'
+            user_flairs_graph =  pygal.HorizontalBar()
+            user_flairs_graph.title = 'Distribution des flairs des utilisateurs'
 
-            posts_flairs_ref_value = max(posts_flairs_ranking.values())/5
-            posts_remainder = 0
+            user_flairs_ref_value = max(user_flairs_ranking.values())/5
 
-            data_for_graph = OrderedDict()
-            for k, v in posts_flairs_ranking.items():
-                if float(v) >= posts_flairs_ref_value:
-                    try:
-                        data_for_graph[k] =  v
-                    except:
-                        raise
+            data_for_graph_user_flairs = OrderedDict()
+            with open(os.path.join(self._output_dir, 'user_flairs.txt'), 'w') as user_flairs:
+                for k, v in user_flairs_ranking.items():
+                    if float(v) >= user_flairs_ref_value:
+                        try:
+                            data_for_graph_user_flairs[k] =  v
+                        except:
+                            raise
+                    user_flairs.write("{flair} {hits}\n".format(flair=k, hits=v))
+
+            data_for_graph_user_flairs = OrderedDict(sorted(data_for_graph_user_flairs.items(), key=lambda t: t[1]))
+
+            user_flairs_graph.x_labels = data_for_graph_user_flairs.keys()
+            user_flairs_graph.add('Poster flairs', data_for_graph_user_flairs.values())
+
+            with open(os.path.join(self._output_dir,'user_flairs.svg'), 'wb') as user_flairs_file:
+                user_flairs_file.write(user_flairs_graph.render())
             
-            pie_chart.x_labels = data_for_graph.keys()
-            pie_chart.add('Poster flairs', data_for_graph.values())
+            section.embed(src='user_flairs.svg', id='posts_subjects', tipe='image/svg+xml', style='margin-left: 25%;', width='50%')
+            section.p('<a href="url">{link}</a>'.format(url='user_flairs.txt', link='All data here'), klass="raw-link")
 
-            with open(os.path.join(self._output_dir,'posts_flairs.svg'), 'wb') as posts_flairs:
-                posts_flairs.write(pie_chart.render())
+        ## Posts
+
+        try:
+            posts_user_flairs_ranking = OrderedDict(sorted(self._data['posts']['flair-presence'].items(),key=lambda t: t[1],reverse=True))
+        except KeyError:
+            pass
+        else:
+            section = self._page.section()
+            posts_user_flairs_graph =  pygal.HorizontalBar()
+            posts_user_flairs_graph.title = 'Distribution des flairs des posteurs'
+
+            posts_user_flairs_ref_value = max(posts_user_flairs_ranking.values())/5
+
+            data_for_graph_posts_user_flairs = OrderedDict()
+            with open(os.path.join(self._output_dir, 'posts_user_flairs.txt'), 'w') as posts_user_flairs:
+                for k, v in posts_user_flairs_ranking.items():
+                    if float(v) >= posts_user_flairs_ref_value:
+                        try:
+                            data_for_graph_posts_user_flairs[k] =  v
+                        except:
+                            raise
+                    posts_user_flairs.write("{flair} {hits}\n".format(flair=k, hits=v))
+
+            data_for_graph_posts_user_flairs = OrderedDict(sorted(data_for_graph_posts_user_flairs.items(), key=lambda t: t[1]))
+
+            posts_user_flairs_graph.x_labels = data_for_graph_posts_user_flairs.keys()
+            posts_user_flairs_graph.add('Poster flairs', data_for_graph_posts_user_flairs.values())
+
+            with open(os.path.join(self._output_dir,'posts_user_flairs.svg'), 'wb') as posts_user_flairs_file:
+                posts_user_flairs_file.write(posts_user_flairs_graph.render())
             
-            section.embed(src='posts_flairs.svg', id='posts_subjects', tipe='image/svg+xml', style='margin-left: 25%;', width='50%')
+            section.embed(src='posts_user_flairs.svg', id='posts_subjects', tipe='image/svg+xml', style='margin-left: 25%;', width='50%')
+            section.p('<a href="url">{link}</a>'.format(url='posts_user_flairs.txt', link='All data here'), klass="raw-link")
 
         # Post flairs
 
