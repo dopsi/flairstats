@@ -29,7 +29,6 @@ class StatsBot:
         
         if not os.path.exists(self._output_dir):
             os.makedirs(self._output_dir)
-        os.chdir(output_dir)
         
         with open(self._data_file) as df:
             self._data = json.load(df)
@@ -38,7 +37,7 @@ class StatsBot:
         self._page.title = 'Statistiques de r/'+self._subreddit
 
     def __del__(self):
-        self._page.write('index.html')
+        self._page.write(os.path.join(self._output_dir,'index.html'))
     
     def generate(self):
         start_time = time.time()
@@ -51,7 +50,7 @@ class StatsBot:
         line_chart.x_labels = map(str, range(0, 24))
         line_chart.add('Posts', time_flatten(self._data['posts']['time']['all'], self._data['posts']['count']))
         line_chart.add('Commentaires', time_flatten(self._data['comments']['time']['all'], self._data['comments']['count']))
-        with open('activity.svg', 'wb') as act:
+        with open(os.path.join(self._output_dir,'activity.svg'), 'wb') as act:
             act.write(line_chart.render())
 
         section.embed(src='activity.svg', id='activity', tipe='image/svg+xml', style='margin-left: 25%;', width='50%')
@@ -83,7 +82,7 @@ class StatsBot:
             pie_chart.x_labels = data_for_graph.keys()
             pie_chart.add('Poster flairs', data_for_graph.values())
 
-            with open('posts_flairs.svg', 'wb') as posts_flairs:
+            with open(os.path.join(self._output_dir,'posts_flairs.svg'), 'wb') as posts_flairs:
                 posts_flairs.write(pie_chart.render())
             
             section.embed(src='posts_flairs.svg', id='posts_subjects', tipe='image/svg+xml', style='margin-left: 25%;', width='50%')
@@ -105,7 +104,7 @@ class StatsBot:
 
             bar_chart.x_labels = posts_subjects_ranking.keys()
             bar_chart.add('Posts', posts_subjects_ranking.values())
-            with open('posts_subjects.svg', 'wb') as posts_subjects:
+            with open(os.path.join(self._output_dir,'posts_subjects.svg'), 'wb') as posts_subjects:
                 posts_subjects.write(bar_chart.render())
             
             section.embed(src='posts_subjects.svg', id='posts_subjects', tipe='image/svg+xml', style='margin-left: 25%;', width='50%')
