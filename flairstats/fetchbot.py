@@ -25,7 +25,7 @@ class FetchBot:
 
         try:
             if self._data['subreddit'] != self._subreddit:
-                raise ValueError('The data file does not correspond the subreddit r/'+self._subreddit)
+                raise ValueError('The data file does not correspond the subreddit r/'+self._subreddit+' (found "'+self._data['subreddit']+'")')
         except KeyError:
             self._data['subreddit'] = self._subreddit
 
@@ -94,9 +94,18 @@ class FetchBot:
                 storage.dictvar(self._data[key]['domain-presence'], str(it.domain), 1, 1)
 
             storage.dict_check_key(self._data[key], 'time', dict())
+            storage.dict_check_key(self._data[key]['time'], 'all', dict())
+            storage.dict_check_key(self._data[key]['time'], '0', dict())
+            storage.dict_check_key(self._data[key]['time'], '1', dict())
+            storage.dict_check_key(self._data[key]['time'], '2', dict())
+            storage.dict_check_key(self._data[key]['time'], '3', dict())
+            storage.dict_check_key(self._data[key]['time'], '4', dict())
+            storage.dict_check_key(self._data[key]['time'], '5', dict())
+            storage.dict_check_key(self._data[key]['time'], '6', dict())
             time_datetime = datetime.datetime.fromtimestamp(float(it.created_utc))
             time_str = str(time_datetime.hour).zfill(2)+str(time_datetime.minute).zfill(2)
-            storage.dictvar(self._data[key]['time'], time_str, 1, 1)
+            storage.dictvar(self._data[key]['time']['all'], time_str, 1, 1)
+            storage.dictvar(self._data[key]['time'][str(time_datetime.weekday())], time_str, 1, 1)
         
         self._data[key]['last'] = new_creation_limit
 
