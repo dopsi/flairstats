@@ -45,15 +45,39 @@ class StatsBot:
 
         section = self._page.section()
 
-        line_chart = pygal.Radar()
-        line_chart.title = 'Activité en fonction de l\'heure'
-        line_chart.x_labels = map(str, range(0, 24))
-        line_chart.add('Posts', time_flatten(self._data['posts']['time']['all'], self._data['posts']['count']))
-        line_chart.add('Commentaires', time_flatten(self._data['comments']['time']['all'], self._data['comments']['count']))
+        # Daily activity
+
+        day_activity = pygal.Radar()
+        day_activity.title = 'Activité en fonction de l\'heure'
+        day_activity.x_labels = map(str, range(0, 24))
+        day_activity.add('Posts', time_flatten(self._data['posts']['time']['all'], self._data['posts']['count']))
+        day_activity.add('Commentaires', time_flatten(self._data['comments']['time']['all'], self._data['comments']['count']))
         with open(os.path.join(self._output_dir,'activity.svg'), 'wb') as act:
-            act.write(line_chart.render())
+            act.write(day_activity.render())
 
         section.embed(src='activity.svg', id='activity', tipe='image/svg+xml', style='margin-left: 25%;', width='50%')
+
+        # Weekly activity
+
+        week_activity = pygal.Radar()
+        week_activity.title = 'Activité en fonction de l\'heure'
+
+        weekdays = OrderedDict([(0, "Monday"), (1, "Tuesday"), (2, "Wednesday"), (3, "Thursday"), (4, "Friday"), (5, "Saturday"),(6, "Sunday")])
+
+        week_activity.x_labels = weekdays.values()
+
+        posts_week_activity = OrderedDict()
+        comments_week_activity = OrderedDict()
+        for n,day in weekdays.items():
+            posts_week_activity[day] = sum(self._data['posts']['time'][str(n)].values())
+            comments_week_activity[day] = sum(self._data['comments']['time'][str(n)].values())
+
+        week_activity.add('Posts', posts_week_activity.values())
+        week_activity.add('Comments', comments_week_activity.values())
+        with open(os.path.join(self._output_dir,'week_activity.svg'), 'wb') as week_act:
+            week_act.write(week_activity.render())
+
+        section.embed(src='week_activity.svg', id='activity', tipe='image/svg+xml', style='margin-left: 25%;', width='50%')
 
         # User flairs
 
